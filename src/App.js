@@ -1,26 +1,65 @@
 import { useDispatch, useSelector } from "react-redux";
+import { addCashAction, getCashAction } from "./store/CashReducer";
+import {
+  addCustomerAction,
+  deleteCustomerAction,
+} from "./store/CustomerReducer";
 
 function App() {
   //? что бы изменять состояние компонента
   const dispatch = useDispatch();
+
   //? через отдельную функцию получаем сотояние и сохраняем в переменную
-  const cash = useSelector(state => state.cash);
+  const cash = useSelector(state => state.cash.cash);
+  const customers = useSelector(state => state.customers.customers);
 
   function addCash(cash) {
-    dispatch({ type: "ADD_CASH", payload: cash });
+    dispatch(addCashAction(cash));
   }
 
   function getCash(cash) {
-    dispatch({ type: "GET_CASH", payload: cash });
+    dispatch(getCashAction(cash));
   }
+
+  function addCustomer(name) {
+    const customer = {
+      name: name,
+      id: Date.now(),
+    };
+    dispatch(addCustomerAction(customer));
+  }
+
+  function deleteCustomer(item) {
+    dispatch({ type: "DELETE_CUSTOMERS", payload: item.id });
+  }
+
   return (
     <div className="app">
-      <div style={{ display: "flex" }}>
-        <div>{cash}</div>
-        <button onClick={() => addCash(+prompt())}>пополнить счёт</button>
-        <button onClick={() => getCash(Number(prompt()))}>
-          снять со счёта
-        </button>
+      <div style={{ display: "flex", flexDirection: "column" }}>
+        <div>
+          <div>{cash}</div>
+          <button onClick={() => addCash(+prompt())}>пополнить счёт</button>
+          <button onClick={() => getCash(Number(prompt()))}>
+            снять со счёта
+          </button>
+          <button onClick={() => addCustomer(prompt())}>
+            добавить клиента
+          </button>
+        </div>
+        <div>
+          {customers ? (
+            <div>
+              {" "}
+              {customers.map(item => (
+                <div key={item.id} onClick={() => deleteCustomer(item)}>
+                  {item.name}
+                </div>
+              ))}{" "}
+            </div>
+          ) : (
+            <div> нет пользователей </div>
+          )}
+        </div>
       </div>
     </div>
   );
