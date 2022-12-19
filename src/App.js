@@ -1,4 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
+import { fetchCustomers } from "./asyncAction/Customers";
 import { addCashAction, getCashAction } from "./store/CashReducer";
 import {
   addCustomerAction,
@@ -26,11 +27,12 @@ function App() {
       name: name,
       id: Date.now(),
     };
+    //? передаём в диспатч экшнкреэйтер и в парамерты экшн пэйлоад
     dispatch(addCustomerAction(customer));
   }
 
   function deleteCustomer(item) {
-    dispatch({ type: "DELETE_CUSTOMERS", payload: item.id });
+    dispatch(deleteCustomerAction(item.id));
   }
 
   return (
@@ -44,6 +46,9 @@ function App() {
           </button>
           <button onClick={() => addCustomer(prompt())}>
             добавить клиента
+          </button>
+          <button onClick={() => dispatch(fetchCustomers())}>
+            клиенты из базы
           </button>
         </div>
         <div>
